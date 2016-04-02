@@ -167,7 +167,13 @@ var parseString = function(s, callback) {
 	st._read = function noop() {}; // redundant? see update below
 	st.push(s);
 	st.push(null);
-	return parseStream(st, callback)
+  var withText = function(err, results) {
+    if (!err && results) {
+      results.source = s;
+    }
+    callback(err, results);
+  };
+	return parseStream(st, withText);
 }
 
 module.exports.parseStream = parseStream;
