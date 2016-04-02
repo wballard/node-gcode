@@ -1,8 +1,12 @@
 var stream = require('stream');
 var util = require('util');
-var parser = require('./parser');
 var fs = require('fs');
+var path = require('path');
 var byline = require('byline');
+var pegjs = require('pegjs');
+var parser = pegjs.buildParser(
+  fs.readFileSync(path.join(__dirname, "parser.pegjs"), "utf8")
+);
 
 // Strips spaces out of all incoming g-code except for comments
 function GCodeScrubber() {
@@ -22,6 +26,7 @@ GCodeScrubber.prototype._transform = function(s, enc, done) {
 					keep_result = false;
 					break;
 				case '(':
+				case '%':
 					if(this.in_comment) {
 						// ERROR
 					} else {
@@ -30,6 +35,7 @@ GCodeScrubber.prototype._transform = function(s, enc, done) {
 					}
 					break;
 				case ')':
+				case '\n':
 					if(this.in_comment) {
 						this.in_comment = false;
 						keep_result=false;

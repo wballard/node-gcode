@@ -13,7 +13,8 @@
     "cnc"
   ],
   "dependencies": {
-    "byline": "^4.1.1"
+    "byline": "^4.1.1",
+    "pegjs": "^0.9.0"
   },
   "engines": {
     "node": "*"
